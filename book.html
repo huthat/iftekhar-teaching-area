@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iftekhar's Teaching Area</title>
+    <style>
+        /* General Body and Font Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            background-color: #0F0E2A; /* Fallback background */
+        }
+
+        /* Background Wrapper with Gradient and Grid Pattern */
+        .background-wrapper {
+            min-height: 100vh;
+            width: 100%;
+            background: linear-gradient(180deg, #0F0E2A 0%, #2A0E4F 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        /* All content should be on top of the grid */
+        .navbar, .page-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #A75AFA;
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        /* Page Content Styles */
+        .page-content {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .main-heading {
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #A75AFA 0%, #5AFAFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sub-heading {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        /* Button Styles */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+            color: #FFFFFF;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .primary-btn {
+            background: linear-gradient(90deg, #A75AFA 0%, #5AFAFF 100%);
+            box-shadow: 0 5px 15px rgba(167, 90, 250, 0.4);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid #5AFAFF;
+            color: #5AFAFF;
+        }
+
+        /* New large buttons for Books/Guides selection */
+        .large-selection-btn {
+            padding: 25px 40px;
+            font-size: 24px;
+            min-width: 200px; /* Ensure they are visibly larger */
+        }
+
+        /* Hidden by default */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Navigation Menu (Sidebar) Styles */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            right: -300px; /* Start off-screen */
+            width: 280px;
+            height: 100%;
+            background-color: #10103a;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            z-index: 100;
+            transition: right 0.4s ease-in-out;
+            padding-top: 60px;
+        }
+
+        .nav-menu.active {
+            right: 0; /* Slide in */
+        }
+        
+        .nav-menu .close-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-menu ul li a {
+            display: block;
+            padding: 15px 30px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-menu ul li a:hover {
+            background-color: #A75AFA;
+        }
+        
+        /* Class/Book List Styles */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .book-list-container {
+             padding: 0 20px;
+             max-width: 800px;
+             margin: 40px auto;
+             text-align: left;
+             background-color: rgba(0,0,0,0.2);
+             border-radius: 8px;
+             padding: 20px;
+        }
+        
+        .book-list-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .book-list-container ul li {
+            background-color: rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #5AFAFF;
+            cursor: pointer; /* Make the list item appear clickable */
+            transition: background-color 0.2s;
+        }
+        .book-list-container ul li:hover {
+            background-color: rgba(255,255,255,0.1); /* Hover effect for entire list item */
+        }
+        /* Remove default link styling as the entire LI is now clickable */
+        .book-list-container ul li a {
+            color: inherit; /* Inherit color from parent LI */
+            text-decoration: none; /* No underline */
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            .logo {
+                font-size: 18px;
+            }
+            .main-heading {
+                font-size: 36px;
+            }
+            .sub-heading {
+                font-size: 18px;
+            }
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 80%;
+                max-width: 250px;
+            }
+            .large-selection-btn {
+                width: 90%; /* Make large buttons take more width on mobile */
+                max-width: 300px;
+                font-size: 20px;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-wrapper">
+        <!-- Navigation Menu (Sidebar) -->
+        <div id="navMenu" class="nav-menu">
+            <div id="closeIcon" class="close-icon">&times;</div>
+            <ul>
+                <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="books-only">Books</a></li> <!-- Changed to Books -->
+                <li><a href="#" class="nav-link" data-page="notes-guides">Notes & Guides</a></li> <!-- Changed to Notes & Guides -->
+                <li><a href="#" class="nav-link" data-page="translation">Translation</a></li>
+                <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content-container">
+            <header class="navbar">
+                <div class="logo">IFTEKHAR'S TEACHING AREA</div>
+                <div id="menuIcon" class="menu-icon">☰</div>
+            </header>
+
+            <!-- Home Page -->
+            <main id="homePage" class="page-content">
+                <h1 class="main-heading">Make Your Learning Journey Easier</h1>
+                <p class="sub-heading">All necessary documents are here which you can freely enjoy.</p>
+                <div class="buttons-container">
+                    <button id="getStartedBtn" class="btn primary-btn">Get Started</button>
+                </div>
+            </main>
+
+            <!-- New Selection Page for Books/Guides -->
+            <main id="selectionPage" class="page-content hidden">
+                <h1 class="main-heading">What are you looking for?</h1>
+                <div class="buttons-container">
+                    <button id="booksSelectionBtn" class="btn primary-btn large-selection-btn">Books</button>
+                    <button id="guidesSelectionBtn" class="btn secondary-btn large-selection-btn">Guides</button>
+                </div>
+            </main>
+
+            <!-- Books Page (now also handles class/year selection) -->
+            <main id="booksPage" class="page-content hidden" style="text-align: left; padding-top: 20px;">
+                <button id="backToClassesBtn" class="btn secondary-btn hidden" style="margin-left: 20px; margin-bottom: 20px;">&larr; Back</button>
+                <h1 id="booksPageTitle" class="main-heading" style="text-align: center;">Select a Class</h1>
+                <div id="classGrid" class="grid-container">
+                    <!-- Class/Year buttons will be inserted here by JavaScript -->
+                </div>
+                <div id="bookListContainer" class="book-list-container hidden">
+                     <h2 id="bookListTitle" style="color: #5AFAFF;"></h2>
+                     <ul id="bookList"></ul>
+                </div>
+            </main>
+            
+            <!-- Other Pages (Placeholder) -->
+             <main id="notesPage" class="page-content hidden">
+                <h1 class="main-heading">Notes</h1>
+                <p class="sub-heading">Notes for all classes will be available here soon.</p>
+            </main>
+             <main id="translationPage" class="page-content hidden">
+                <h1 class="main-heading">Translation</h1>
+                <p class="sub-heading">Translation services will be available here soon.</p>
+            </main>
+             <main id="contactPage" class="page-content hidden">
+                <h1 class="main-heading">Contact Us</h1>
+                <p class="sub-heading">You can reach us at: contact@iftekhar.com</p>
+            </main>
+
+        </div>
+    </div>
+
+    <script>
+        // --- DATA FOR BOOKS ---
+        // The bookData structure is updated to support nested years for Honours and links for specific classes.
+        const bookData = {
+            "Class 1": [
+                { name: "আমার বাংলা বই", link: "" },
+                { name: "English for Today", link: "" },
+                { name: "প্রাথমিক গণিত", link: "" },
+                { name: "পরিবেশ পরিচিতি", link: "" }
+            ],
+            "Class 2": [
+                { name: "আমার বাংলা বই", link: "" },
+                { name: "English for Today", link: "" },
+                { name: "প্রাথমিক গণিত", link: "" },
+                { name: "পরিবেশ পরিচিতি", link: "" }
+            ],
+            "Class 3": [
+                { name: "আমার বাংলা বই", link: "" },
+                { name: "English for Today", link: "" },
+                { name: "প্রাথমিক গণিত", link: "" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "" },
+                { name: "প্রাথমিক বিজ্ঞান", link: "" },
+                { name: "ইসলাম ও নৈতিক শিক্ষা", link: "" },
+                { name: "হিন্দুধর্ম ও নৈতিক শিক্ষা", link: "" }
+            ],
+            "Class 4": [
+                { name: "আমার বাংলা বই", link: "" },
+                { name: "English for Today", link: "" },
+                { name: "প্রাথমিক গণিত", link: "" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "" },
+                { name: "প্রাথমিক বিজ্ঞান", link: "" },
+                { name: "ইসলাম ও নৈতিক শিক্ষা", link: "" },
+                { name: "হিন্দুধর্ম ও নৈতিক শিক্ষা", link: "" }
+            ],
+            "Class 5": [
+                { name: "আমার বাংলা বই", link: "" },
+                { name: "English for Today", link: "" },
+                { name: "প্রাথমিক গণিত", link: "" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "" },
+                { name: "প্রাথমিক বিজ্ঞান", link: "" },
+                { name: "ইসলাম ও নৈতিক শিক্ষা", link: "" },
+                { name: "হিন্দুধর্ম ও নৈতিক শিক্ষা", link: "" }
+            ],
+            "Class 6": [
+                { name: "চারুপাঠ", link: "https://drive.google.com/file/d/1HMLLnPvoFbwdLUYOyuOYKkuTma6oI0gD/view?usp=drive_link" },
+                { name: "আনন্দপাঠ", link: "https://drive.google.com/file/d/16L1WW3QTqQfai9aPayV0gyE5igRMiFeL/view?usp=drive_link" },
+                { name: "বাংলা ব্যাকরণ ও নির্মিতি", link: "https://drive.google.com/file/d/1AQo5mMLwsMa_ASt0uYANyl7Cb7zaqq6i/view?usp=drive_link" },
+                { name: "English For Today", link: "https://drive.google.com/file/d/1aX0Py2PLwSgh-NVUsTqfI0bqEplYo7WV/view?usp=drive_link" },
+                { name: "গণিত", link: "https://drive.google.com/file/d/13iUtxnh9u1Q6rFU0gyvpPGLeCSGCEpc7/view?usp=drive_link" },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", link: "https://drive.google.com/file/d/1u2zRiyNz6ekcFMRskixrrCUxCyJQHDkr/view?usp=drive_link" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "https://drive.google.com/file/d/1F2v5Pf6br3lu_WChJ1fwiYwyct_Fs6UX/view?usp=drive_link" },
+                { name: "বিজ্ঞান", link: "https://drive.google.com/file/d/1EPRUddjMf4jjogGagq6J7Rll1OhZRwmk/view?usp=drive_link" },
+                { name: "কৃষিশিক্ষা", link: "https://drive.google.com/file/d/1H9OqVnqoCB63MgLkgWunue4EGE6YzS9D/view?usp=drive_link" },
+                { name: "ইসলাম শিক্ষা", link: "https://drive.google.com/file/d/1uW6-dw-0KlszZ8AQjq5SDE2elq5eZYsN/view?usp=drive_link" },
+                { name: "হিন্দুধর্ম শিক্ষা", link: "https://drive.google.com/file/d/1tzM4rRxETJGqhYwEujFedkX_POPegG-v/view?usp=drive_link" }
+            ],
+            "Class 7": [
+                { name: "সপ্তবর্ণা", link: "https://drive.google.com/file/d/15IDsWA0wqIThNLuq8n9ijOsRwXUQJftp/view?usp=drive_link" },
+                { name: "আনন্দপাঠ", link: "https://drive.google.com/file/d/1CwvHeLDkUGJU8_r6ChsRSYNs2PBXhRCE/view?usp=drive_link" },
+                { name: "বাংলা ব্যাকরণ ও নির্মিতি", link: "https://drive.google.com/file/d/1gWHxsoJk2BFQ03RmoPIkd-nn5-wZTvJC/view?usp=drive_link" },
+                { name: "English For Today", link: "https://drive.google.com/file/d/1XTG6vE0RSM645eE5-XAKMirCzGUPPllz/view?usp=drive_link" },
+                { name: "গণিত", link: "https://drive.google.com/file/d/1iKHx1wxYi7I6REjR-5j8fW1uVI2xT5zH/view?usp=drive_link" },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", link: "https://drive.google.com/file/d/1LCG5mQF2hEwCMKXeZDsPCKjbSdaxzlql/view?usp=drive_link" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "https://drive.google.com/file/d/1Rjkz4Hjp04VbxMnVZy1Eht1F5O62pmvR/view?usp=drive_link" },
+                { name: "বিজ্ঞান", link: "https://drive.google.com/file/d/1lb7bQEzhSLG0hZZ9y14GCmhcmxjWpa15/view?usp=drive_link" },
+                { name: "কৃষিশিক্ষা", link: "https://drive.google.com/file/d/1HYtDOWnpMrWYefOk5mZWn8-uMCsCpNUR/view?usp=drive_link" },
+                { name: "ইসলাম শিক্ষা", link: "https://drive.google.com/file/d/1sLsI5_oGua43iWq2-s7mzLWnAIZ_xw21/view?usp=drive_link" },
+                { name: "হিন্দুধর্ম শিক্ষা", link: "https://drive.google.com/file/d/1hqm1YHfWs0pMTAR9IVyGOSgrhYJEMVsj/view?usp=drive_link" }
+            ],
+            "Class 8": [
+                { name: "সাহিত্য-কণিকা", link: "https://drive.google.com/file/d/14Hg8HRdcjqnhy2raqoAbHL8oHLUbUSwA/view?usp=drive_link" },
+                { name: "আনন্দপাঠ", link: "https://drive.google.com/file/d/1fm9ocm4MA3n3SFRpX8KM8sNN0-8Wl_ap/view?usp=drive_link" },
+                { name: "বাংলা ব্যাকরণ ও নির্মিতি", link: "https://drive.google.com/file/d/117pXoJyf_LnJgxOy7R9-HcYMOGHeh2cq/view?usp=drive_link" },
+                { name: "English For Today", link: "https://drive.google.com/file/d/1N7E-_Dgd1xX5VC4GmJamf4Yo4VEzvTvu/view?usp=drive_link" },
+                { name: "গণিত", link: "https://drive.google.com/file/d/1UTGLGuQxMMaK_YgErIivbMI_3PcvkRbc/view?usp=drive_link" },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", link: "https://drive.google.com/file/d/152cFSzvuZOrWo_BuYhgMav91g8pRpv9I/view?usp=drive_link" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "https://drive.google.com/file/d/1HIxFLkgo4ZLG-qUz2achu5K_v40T0cfn/view?usp=drive_link" },
+                { name: "বিজ্ঞান", link: "https://drive.google.com/file/d/1a5-WIfGsqunOpFz55nCL-AK2y5XVs7zB/view?usp=drive_link" },
+                { name: "কৃষিশিক্ষা", link: "https://drive.google.com/file/d/1hpNzkGvJ6Q5efgSB7-Dtt1FnSYrh3zZu/view?usp=drive_link" },
+                { name: "ইসলাম শিক্ষা", link: "https://drive.google.com/file/d/1108SRYaCP3Po5M3DU1lWe8ZtIhLFTloJ/view?usp=drive_link" },
+                { name: "হিন্দুধর্ম শিক্ষা", link: "https://drive.google.com/file/d/1t47vMMl7N0tzBbJ85xOh40SHm45cLvfw/view?usp=drive_link" }
+            ],
+            "Class 9-10": [
+                { name: "বাংলা সাহিত্য", link: "https://drive.google.com/file/d/1EL_DZGQXh-w2qVVlHKo_BWOXkiPWGF3R/view?usp=drive_link" },
+                { name: "বাংলা সহপাঠ", link: "https://drive.google.com/file/d/1uNspy7qUYc8I8WffkaEVt9caBGlS_LCG/view?usp=drive_link" },
+                { name: "বাংলা ভাষার ব্যাকরণ ও নির্মিতি", link: "https://drive.google.com/file/d/14pcG6SDel6AUzrPZk2qzUjJb_9HYt-sg/view?usp=drive_link" },
+                { name: "English For Today", link: "https://drive.google.com/file/d/1Y7ygihk1dAkbWcBbPG9oFU3F_CCZ1gGa/view?usp=drive_link" },
+                { name: "English Grammar and Composition", link: "https://drive.google.com/file/d/1iVqQ5X3jw3UmnHKclSKkDyD4R2m9dY9J/view?usp=drive_link" },
+                { name: "গণিত", link: "https://drive.google.com/file/d/1IuuYwHXUpTGHOpumKq-x6Th4h2xf1b9s/view?usp=drive_link" },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", link: "https://drive.google.com/file/d/10DYq8yuMb3tgWgTZ7fXx_KThABOUJR6k/view?usp=drive_link" },
+                { name: "বিজ্ঞান", link: "https://drive.google.com/file/d/12dYZXPKDogQyp5QJUslpUB8QMJmXxLts/view?usp=drive_link" },
+                { name: "পদার্থবিজ্ঞান", link: "https://drive.google.com/file/d/121GCSD2909n-ETowJfdtzqOoVcdAe9Fx/view?usp=drive_link" },
+                { name: "রসায়ন", link: "https://drive.google.com/file/d/1m2QJVWBp1da99iU6GH-u0IldYflZuCFR/view?usp=drive_link" },
+                { name: "জীববিজ্ঞান", link: "https://drive.google.com/file/d/1cbxXBB1uU4c7Q2rA54fpbmxVFSUKtZDA/view?usp=drive_link" },
+                { name: "উচ্চতর গণিত", link: "https://drive.google.com/file/d/1U_q1wBTUS1ngtfqRr21LB-nQGjxXrrsA/view?usp=drive_link" },
+                { name: "ভূগোল ও পরিবেশ", link: "https://drive.google.com/file/d/1Z0mkg4diaC-7Xaab3dEeCeHrqrx_flx_/view?usp=drive_link" },
+                { name: "অর্থনীতি", link: "https://drive.google.com/file/d/1aJVfyY6oBBqmbgcdIqD4LLggt4ULZLWe/view?usp=drive_link" },
+                { name: "কৃষিশিক্ষা", link: "https://drive.google.com/file/d/1kLJsU1fBMO59rVOcrXkJ-QLbP6V14OC6/view?usp=drive_link" },
+                { name: "পৌরনীতি ও নাগরিকতা", link: "https://drive.google.com/file/d/12pHjW5lhDAuOjsfziQbFTX5wpPJwt7Tm/view?usp=drive_link" },
+                { name: "হিসাববিজ্ঞান", link: "https://drive.google.com/file/d/1cY77zp-vqOB2pPuVfyrFc2c8UHpt11Qk/view?usp=drive_link" },
+                { name: "ফিন্যান্স ও ব্যাংকিং", link: "https://drive.google.com/file/d/1hUOZbxt7PhoCl_GIOFpBAGtUNMHRgfg_/view?usp=drive_link" },
+                { name: "ব্যবসায় উদ্যোগ", link: "https://drive.google.com/file/d/1gBFoWrP_pZBTFBbjaOgAsIx31D2IYcgl/view?usp=drive_link" },
+                { name: "ইসলাম শিক্ষা", link: "https://drive.google.com/file/d/18UfJre9Qz5fy7w6dejqsXKHQxxKqoAmH/view?usp=drive_link" },
+                { name: "হিন্দুধর্ম শিক্ষা", link: "https://drive.google.com/file/d/1m0a0ak7Ij776CRadXAelbINh3bnx79v9/view?usp=drive_link" },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", link: "https://drive.google.com/file/d/1C7K6iGBpGEdr-p_vQfvEgMlDXh5ss8RI/view?usp=drive_link" },
+                { name: "বাংলাদেশের ইতিহাস ও বিশ্বসভ্যতা", link: "https://drive.google.com/file/d/14zEZ5cHXoJMAVeaGmlD0fpEYVnqYIkW0/view?usp=drive_link" }
+            ],
+            "Class 11-12": [
+                { name: "সাহিত্যপাঠ", link: "https://drive.google.com/file/d/11tNq5F0bfYFf5QexWOWAz3VlpryMlaFD/view?usp=drive_link" },
+                { name: "সহপাঠ", link: "https://drive.google.com/file/d/1xwZ1GmHSRS5v39YMnsz84DsvAq8enGIE/view?usp=drive_link" },
+                { name: "English for Today", link: "https://drive.google.com/file/d/1MJuzkvoyB57hueE2qasG3ou9nokQHY7T/view?usp=drive_link" },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", link: "https://drive.google.com/file/d/16AVZQzh9LRq4_o238_bdM16jd57ZuNC8/view?usp=drive_link" }
+            ],
+            "Honours (English)": {
+                "First Year": [
+                    { name: "Introduction to Poetry", link: "" },
+                    { name: "Introduction to Prose", link: "" },
+                    { name: "History of English Language", link: "" },
+                    { name: "Literary Terms", link: "" }
+                ],
+                "Second Year": [
+                    { name: "English Reading Skills", link: "" },
+                    { name: "History of English Literature (1550-1798)", link: "" },
+                    { name: "Elizabethan and Jacobean Drama", link: "" },
+                    { name: "17th Century Poetry", link: "" }
+                ],
+                "Third Year": [
+                    { name: "18th Century English Fiction", link: "" },
+                    { name: "Romantic Poetry", link: "" },
+                    { name: "Victorian Poetry", link: "" },
+                    { name: "Modern Drama", link: "" },
+                    { name: "Literary Criticism", link: "" }
+                ],
+                "Fourth Year": [
+                    { name: "Modern Novel", link: "" },
+                    { name: "American Literature", link: "" },
+                    { name: "Continental Literature", link: "" },
+                    { name: "Postcolonial Literature", link: "" },
+                    { name: "Research Methodology and Viva Voce", link: "" }
+                ]
+            },
+            "Masters (English)": [
+                { name: "Modern Poetry", link: "" },
+                { name: "Modern Drama", link: "" },
+                { name: "Modern Novel", link: "" },
+                { name: "Literary Criticism", link: "" },
+                { name: "American Literature", link: "" },
+                { name: "Continental Literature", link: "" },
+                { name: "Postcolonial Literature", link: "" },
+                { name: "Research Methodology", link: "" }
+            ]
+        };
+
+        // --- DOM ELEMENTS ---
+        const menuIcon = document.getElementById('menuIcon');
+        const closeIcon = document.getElementById('closeIcon');
+        const navMenu = document.getElementById('navMenu');
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const booksSelectionBtn = document.getElementById('booksSelectionBtn');
+        const guidesSelectionBtn = document.getElementById('guidesSelectionBtn');
+        const backToClassesBtn = document.getElementById('backToClassesBtn');
+        
+        const pages = document.querySelectorAll('.page-content');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const booksPageTitle = document.getElementById('booksPageTitle');
+        const classGrid = document.getElementById('classGrid');
+        const bookListContainer = document.getElementById('bookListContainer');
+        const bookListTitle = document.getElementById('bookListTitle');
+        const bookList = document.getElementById('bookList');
+
+        // --- GLOBAL STATE VARIABLES ---
+        let currentView = 'home'; // Tracks the current state within the app: 'home', 'selection', 'classList', 'honoursYears', 'bookList'
+        let currentSelectedClass = null; // Stores the name of the currently selected class (e.g., "Honours (English)")
+
+        // --- FUNCTIONS ---
+        
+        // Function to switch between main pages
+        function showPage(pageId) {
+            pages.forEach(page => {
+                if (page.id === pageId + 'Page') {
+                    page.classList.remove('hidden');
+                } else {
+                    page.classList.add('hidden');
+                }
+            });
+            navMenu.classList.remove('active'); // Close menu after navigation
+            currentView = pageId; // Update global state
+        }
+
+        // Function to populate the grid with class names or year names
+        function populateGrid(data, isYears = false, parentClassName = null) {
+            classGrid.innerHTML = ''; // Clear existing buttons
+            bookListContainer.classList.add('hidden'); // Ensure book list is hidden
+            classGrid.classList.remove('hidden'); // Ensure grid is visible
+            
+            if (isYears) {
+                booksPageTitle.textContent = `Select Year for ${parentClassName}`;
+            } else {
+                booksPageTitle.textContent = `Select a Class`;
+            }
+
+            for (const key in data) {
+                const button = document.createElement('button');
+                button.className = 'btn primary-btn';
+                button.textContent = key;
+                button.dataset.name = key; // Store class name or year name
+                
+                if (isYears) {
+                    // If showing years, click leads to book list for that year
+                    button.addEventListener('click', () => showBookList(parentClassName, key));
+                } else {
+                    // If showing classes, check if it's Honours (nested data)
+                    if (typeof data[key] === 'object' && !Array.isArray(data[key])) {
+                        button.addEventListener('click', () => showHonoursYears(key));
+                    } else {
+                        button.addEventListener('click', () => showBookList(key));
+                    }
+                }
+                classGrid.appendChild(button);
+            }
+        }
+        
+        // Function to display the year options for Honours (English)
+        function showHonoursYears(className) {
+            currentSelectedClass = className; // Set the current selected class
+            populateGrid(bookData[className], true, className); // Populate with years
+            currentView = 'honoursYears'; // Update global state
+            backToClassesBtn.classList.remove('hidden'); // Show back button
+        }
+
+        // Function to display the book list for a selected class or year
+        function showBookList(className, yearName = null) {
+            classGrid.classList.add('hidden'); // Hide the class/year grid
+            bookListContainer.classList.remove('hidden'); // Show the book list container
+            backToClassesBtn.classList.remove('hidden'); // Show back button
+
+            let booksToDisplay;
+            if (yearName) {
+                bookListTitle.textContent = `Books for ${className} - ${yearName}`;
+                booksToDisplay = bookData[className][yearName];
+                currentSelectedClass = className; // Keep track of the Honours class
+            } else {
+                bookListTitle.textContent = `Books for ${className}`;
+                booksToDisplay = bookData[className];
+                currentSelectedClass = className; // Set the current selected class
+            }
+            
+            bookList.innerHTML = ''; // Clear previous list
+            
+            booksToDisplay.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.name; // Display the book name
+
+                // If a link exists, make the entire LI clickable
+                if (item.link) {
+                    li.addEventListener('click', () => {
+                        window.open(item.link, '_blank'); // Open link in new tab
+                    });
+                }
+                bookList.appendChild(li);
+            });
+            
+            currentView = 'bookList'; // Update global state
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // Toggle navigation menu
+        menuIcon.addEventListener('click', () => {
+            navMenu.classList.add('active');
+        });
+
+        closeIcon.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+        });
+
+        // Handle navigation link clicks
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                
+                if (pageId === 'books-only') {
+                    showPage('books');
+                    populateGrid(bookData, false);
+                    backToClassesBtn.classList.add('hidden'); // Hide back button on initial class list
+                } else if (pageId === 'notes-guides') {
+                    showPage('notes'); // Direct to notes page
+                    classGrid.classList.add('hidden');
+                    bookListContainer.classList.add('hidden');
+                    backToClassesBtn.classList.add('hidden');
+                } else {
+                    showPage(pageId);
+                    // For other pages, ensure book list related elements are hidden
+                    classGrid.classList.add('hidden');
+                    bookListContainer.classList.add('hidden');
+                    backToClassesBtn.classList.add('hidden');
+                }
+            });
+        });
+
+        // "Get Started" button click
+        getStartedBtn.addEventListener('click', () => {
+            showPage('selection'); // Go to the new selection page
+        });
+
+        // "Books" selection button click
+        booksSelectionBtn.addEventListener('click', () => {
+            showPage('books');
+            populateGrid(bookData, false); // Populate with class names
+            backToClassesBtn.classList.add('hidden'); // Hide back button initially
+        });
+
+        // "Guides" selection button click (currently leads to the same class list)
+        guidesSelectionBtn.addEventListener('click', () => {
+            showPage('books');
+            populateGrid(bookData, false); // Populate with class names
+            booksPageTitle.textContent = "Select a Class for Guides"; // Optionally change title
+            backToClassesBtn.classList.add('hidden'); // Hide back button initially
+        });
+
+        // "Back" button click logic
+        backToClassesBtn.addEventListener('click', () => {
+            if (currentView === 'bookList') {
+                // If currently showing a book list
+                if (currentSelectedClass && typeof bookData[currentSelectedClass] === 'object' && !Array.isArray(bookData[currentSelectedClass])) {
+                    // If it was an Honours year book list, go back to Honours year selection
+                    showHonoursYears(currentSelectedClass);
+                } else {
+                    // Otherwise, go back to the main class list
+                    populateGrid(bookData, false);
+                    backToClassesBtn.classList.add('hidden'); // Hide back button on main class list
+                    currentView = 'classList';
+                }
+            } else if (currentView === 'honoursYears') {
+                // If currently showing Honours year selection, go back to main class list
+                populateGrid(bookData, false);
+                backToClassesBtn.classList.add('hidden'); // Hide back button on main class list
+                currentView = 'classList'; // Set currentView to indicate we are back to the main class list
+            }
+            // If currentView is 'classList' (already at the top level of books page),
+            // the back button should ideally take them to the selection page or home.
+            // For now, it just hides itself if already at classList.
+        });
+        
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home'); // Show home page by default
+            backToClassesBtn.classList.add('hidden'); // Ensure back button is hidden initially
+        });
+
+    </script>
+</body>
+</html>
